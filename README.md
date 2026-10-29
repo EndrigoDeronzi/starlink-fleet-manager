@@ -4,6 +4,12 @@ Sistema demonstrativo para consolidar o inventário e as despesas de múltiplas 
 
 **O repositório contém somente código e dados fictícios.** A instalação demonstrativa não acessa a API Starlink. Os segredos são gerados na sua máquina e ficam fora do Git.
 
+## Prévia do dashboard
+
+![Prévia ilustrativa do dashboard com dados fictícios](docs/images/dashboard-preview.svg)
+
+*Imagem ilustrativa baseada nos dados de demonstração. Não é uma captura de uma instância Grafana. O dashboard executável está em `grafana/dashboards/fleet.json`.*
+
 ## Recursos
 
 - Visão consolidada por empresa, e-mail, titularidade, conta e obra/regional.

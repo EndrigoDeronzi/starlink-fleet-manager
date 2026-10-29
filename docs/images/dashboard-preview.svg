@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1030" viewBox="0 0 1440 1030">
+<rect width="1440" height="1030" fill="#10151b"/>
+<style>text{font-family:Arial,sans-serif;fill:#e2e8f0}.muted{fill:#95a4b5}.green{fill:#48d7a0}</style>
+<text x="32" y="42" font-size="26" class="">◉  Starlink Fleet | Gestão e conectividade</text>
+<text x="32" y="70" font-size="14" class="muted">PRÉVIA ILUSTRATIVA • dados fictícios • não é uma captura de uma instância Grafana</text>
+<rect x="32" y="92" width="210" height="42" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="44" y="119" font-size="14" class="">Empresa: Todas</text>
+<rect x="256" y="92" width="160" height="42" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="268" y="119" font-size="14" class="">Titular: Todos</text>
+<rect x="430" y="92" width="260" height="42" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="442" y="119" font-size="14" class="">E-mail: Todos</text>
+<rect x="704" y="92" width="240" height="42" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="716" y="119" font-size="14" class="">Obra: Todas</text>
+<rect x="958" y="92" width="200" height="42" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="970" y="119" font-size="14" class="">Conta: Todas</text>
+<rect x="1172" y="92" width="235" height="42" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="1184" y="119" font-size="14" class="">Últimos 90 dias</text>
+<rect x="32" y="154" width="216" height="112" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="46" y="183" font-size="14" class="muted">Antenas</text>
+<text x="46" y="231" font-size="30" class="green">10</text>
+<rect x="264" y="154" width="216" height="112" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="278" y="183" font-size="14" class="muted">CNPJ</text>
+<text x="278" y="231" font-size="30" class="green">8</text>
+<rect x="496" y="154" width="216" height="112" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="510" y="183" font-size="14" class="muted">CPF</text>
+<text x="510" y="231" font-size="30" class="green">2</text>
+<rect x="728" y="154" width="216" height="112" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="742" y="183" font-size="14" class="muted">Serviços ativos</text>
+<text x="742" y="231" font-size="30" class="green">5</text>
+<rect x="960" y="154" width="216" height="112" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="974" y="183" font-size="14" class="muted">Online</text>
+<text x="974" y="231" font-size="30" class="green">Sem coleta</text>
+<rect x="1192" y="154" width="216" height="112" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="1206" y="183" font-size="14" class="muted">Offline</text>
+<text x="1206" y="231" font-size="30" class="green">Sem coleta</text>
+<rect x="32" y="286" width="660" height="238" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="50" y="316" font-size="18" class="">Antenas por obra / regional</text>
+<text x="52" y="355" font-size="15" class="">Obra Demo BETA</text>
+<rect x="220" y="335" width="360" height="26" rx="8" fill="#219c78" stroke="#219c78"/>
+<text x="592" y="355" font-size="16" class="">4</text>
+<text x="52" y="413" font-size="15" class="">Obra Demo ALFA</text>
+<rect x="220" y="393" width="270" height="26" rx="8" fill="#219c78" stroke="#219c78"/>
+<text x="502" y="413" font-size="16" class="">3</text>
+<text x="52" y="471" font-size="15" class="">Sem obra</text>
+<rect x="220" y="451" width="270" height="26" rx="8" fill="#219c78" stroke="#219c78"/>
+<text x="502" y="471" font-size="16" class="">3</text>
+<rect x="712" y="286" width="695" height="238" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="732" y="316" font-size="18" class="">Atualização das integrações API</text>
+<text x="733" y="359" font-size="16" class="">Empresa Alfa · demo-alfa</text>
+<text x="1110" y="359" font-size="14" class="green">3 antenas / 3 linhas</text>
+<text x="733" y="409" font-size="16" class="">Empresa Beta · demo-beta</text>
+<text x="1110" y="409" font-size="14" class="green">4 antenas / 4 linhas</text>
+<text x="733" y="473" font-size="14" class="muted">Coletas simuladas do ambiente demonstrativo</text>
+<rect x="32" y="544" width="443" height="105" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="48" y="574" font-size="15" class="muted">Faturas no período · BRL</text>
+<text x="48" y="620" font-size="30" class="green">4.420,50</text>
+<rect x="498" y="544" width="443" height="105" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="514" y="574" font-size="15" class="muted">Saldo devido API · BRL</text>
+<text x="514" y="620" font-size="30" class="green">1.473,50</text>
+<rect x="964" y="544" width="443" height="105" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="980" y="574" font-size="15" class="muted">Previsão mensal manual · BRL</text>
+<text x="980" y="620" font-size="30" class="green">759,80</text>
+<rect x="32" y="669" width="675" height="128" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="48" y="699" font-size="17" class="">Latência · coleta futura</text>
+<text x="217" y="757" font-size="18" class="muted">Sem coleta de telemetria</text>
+<rect x="732" y="669" width="675" height="128" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="748" y="699" font-size="17" class="">Perda de pacotes · coleta futura</text>
+<text x="917" y="757" font-size="18" class="muted">Sem coleta de telemetria</text>
+<rect x="32" y="817" width="1375" height="177" rx="8" fill="#19222d" stroke="#2e3b49"/>
+<text x="50" y="848" font-size="18" class="">Inventário consolidado · exemplos</text>
+<text x="50" y="881" font-size="14" class="muted">Empresa</text>
+<text x="245" y="881" font-size="14" class="muted">KIT</text>
+<text x="505" y="881" font-size="14" class="muted">Obra</text>
+<text x="750" y="881" font-size="14" class="muted">Origem</text>
+<text x="920" y="881" font-size="14" class="muted">Serviço</text>
+<text x="1120" y="881" font-size="14" class="muted">Conectividade</text>
+<text x="50" y="921" font-size="14" class="">Empresa Alfa</text>
+<text x="245" y="921" font-size="14" class="">DEMO-ALFA-001</text>
+<text x="505" y="921" font-size="14" class="">Obra Demo ALFA</text>
+<text x="750" y="921" font-size="14" class="">API</text>
+<text x="920" y="921" font-size="14" class="">Ativo</text>
+<text x="1120" y="921" font-size="14" class="">Sem coleta</text>
+<text x="50" y="961" font-size="14" class="">Empresa Alfa</text>
+<text x="245" y="961" font-size="14" class="">DEMO-MANUAL-001</text>
+<text x="505" y="961" font-size="14" class="">Sem obra</text>
+<text x="750" y="961" font-size="14" class="">CSV</text>
+<text x="920" y="961" font-size="14" class="">Sem informação</text>
+<text x="1120" y="961" font-size="14" class="">Sem coleta</text>
+<text x="32" y="1020" font-size="12" class="muted">Situação contratual e conectividade são indicadores distintos. Valores financeiros demonstrativos.</text>
+</svg>
