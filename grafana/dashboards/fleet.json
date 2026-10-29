@@ -1,0 +1,1082 @@
+{
+  "id": null,
+  "uid": "starlink-fleet-demo",
+  "title": "Starlink Fleet · Gestão e conectividade",
+  "tags": [
+    "demo",
+    "starlink",
+    "postgresql",
+    "fleet"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "editable": false,
+  "graphTooltip": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "templating": {
+    "list": [
+      {
+        "name": "company",
+        "label": "Empresa",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "fleet-postgres"
+        },
+        "query": "SELECT DISTINCT company_name AS __text,company_id AS __value FROM reporting.inventory ORDER BY 1",
+        "definition": "SELECT DISTINCT company_name AS __text,company_id AS __value FROM reporting.inventory ORDER BY 1",
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "allValue": "__all__",
+        "current": {
+          "selected": true,
+          "text": "Todos",
+          "value": "$__all"
+        },
+        "options": []
+      },
+      {
+        "name": "kind",
+        "label": "Titular",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "fleet-postgres"
+        },
+        "query": "SELECT DISTINCT kind AS __text,kind AS __value FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) ORDER BY 1",
+        "definition": "SELECT DISTINCT kind AS __text,kind AS __value FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) ORDER BY 1",
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "allValue": "__all__",
+        "current": {
+          "selected": true,
+          "text": "Todos",
+          "value": "$__all"
+        },
+        "options": []
+      },
+      {
+        "name": "email",
+        "label": "E-mail",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "fleet-postgres"
+        },
+        "query": "SELECT DISTINCT COALESCE(NULLIF(email,''),'Sem e-mail') AS __text,COALESCE(NULLIF(email,''),'__empty__') AS __value FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) ORDER BY 1",
+        "definition": "SELECT DISTINCT COALESCE(NULLIF(email,''),'Sem e-mail') AS __text,COALESCE(NULLIF(email,''),'__empty__') AS __value FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) ORDER BY 1",
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "allValue": "__all__",
+        "current": {
+          "selected": true,
+          "text": "Todos",
+          "value": "$__all"
+        },
+        "options": []
+      },
+      {
+        "name": "site",
+        "label": "Obra / regional",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "fleet-postgres"
+        },
+        "query": "SELECT DISTINCT site AS __text,site AS __value FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) ORDER BY 1",
+        "definition": "SELECT DISTINCT site AS __text,site AS __value FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) ORDER BY 1",
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "allValue": "__all__",
+        "current": {
+          "selected": true,
+          "text": "Todos",
+          "value": "$__all"
+        },
+        "options": []
+      },
+      {
+        "name": "account",
+        "label": "Conta",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "fleet-postgres"
+        },
+        "query": "SELECT source AS __value,company_name||' · '||COALESCE(NULLIF(string_agg(DISTINCT email,', ' ORDER BY email),''),source) AS __text FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) GROUP BY company_name,source ORDER BY 2",
+        "definition": "SELECT source AS __value,company_name||' · '||COALESCE(NULLIF(string_agg(DISTINCT email,', ' ORDER BY email),''),source) AS __text FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) GROUP BY company_name,source ORDER BY 2",
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "allValue": "__all__",
+        "current": {
+          "selected": true,
+          "text": "Todos",
+          "value": "$__all"
+        },
+        "options": []
+      },
+      {
+        "name": "currency",
+        "label": "Moeda",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "fleet-postgres"
+        },
+        "query": "SELECT DISTINCT currency AS __text,currency AS __value FROM reporting.invoices WHERE currency IS NOT NULL ORDER BY 1",
+        "definition": "SELECT DISTINCT currency AS __text,currency AS __value FROM reporting.invoices WHERE currency IS NOT NULL ORDER BY 1",
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": false,
+        "includeAll": false,
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "BRL",
+          "value": "BRL"
+        },
+        "options": []
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Starlink Fleet Manager · DEMO",
+      "type": "text",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 3
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Ambiente demonstrativo — dados inteiramente fictícios.**\n\nAPI e CSV aparecem juntos. Serviço ativo é situação contratual. Online/offline exige telemetria recente; sem coletor os painéis mostram **Sem coleta**. As variáveis do Grafana filtram a visualização; não substituem as permissões por empresa da aplicação."
+      }
+    },
+    {
+      "id": 2,
+      "title": "Antenas no filtro",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "Inventário atual; não é limitado pelo intervalo de datas.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS \"Antenas\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 3,
+      "title": "CNPJ",
+      "type": "stat",
+      "gridPos": {
+        "x": 3,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS \"CNPJ\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) AND kind='CNPJ'",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 4,
+      "title": "CPF",
+      "type": "stat",
+      "gridPos": {
+        "x": 6,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS \"CPF\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) AND kind='CPF'",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Serviços ativos",
+      "type": "stat",
+      "gridPos": {
+        "x": 9,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "Ativo não significa online.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS \"Ativos\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) AND service_status='Ativo'",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Sem obra",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS \"Pendentes\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) AND site='Sem obra'",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Conectividade · online",
+      "type": "stat",
+      "gridPos": {
+        "x": 15,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "Sem coleta fresca não é contado como offline.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT CASE WHEN count(*) FILTER(WHERE c.online IS NOT NULL)=0 THEN NULL ELSE count(*) FILTER(WHERE c.online=true) END AS online FROM reporting.connectivity c JOIN (SELECT * FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) v USING(company_id,source,terminal_id,kit)",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "Sem coleta"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 8,
+      "title": "Conectividade · offline",
+      "type": "stat",
+      "gridPos": {
+        "x": 18,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "Amostras com mais de cinco minutos viram Sem coleta.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT CASE WHEN count(*) FILTER(WHERE c.online IS NOT NULL)=0 THEN NULL ELSE count(*) FILTER(WHERE c.online=false) END AS offline FROM reporting.connectivity c JOIN (SELECT * FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) v USING(company_id,source,terminal_id,kit)",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "Sem coleta"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 9,
+      "title": "Integrações desatualizadas",
+      "type": "stat",
+      "gridPos": {
+        "x": 21,
+        "y": 3,
+        "w": 3,
+        "h": 4
+      },
+      "description": "Último sucesso há mais de 30 minutos. O demo não se atualiza sozinho.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT count(*) AS \"Integrações\" FROM reporting.integrations WHERE stale AND source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})))",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 10,
+      "title": "Antenas por obra / regional",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 7,
+        "w": 9,
+        "h": 8
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT site AS \"Obra\",count(*) AS \"Antenas\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) GROUP BY site ORDER BY count(*) DESC,site",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showValue": "always",
+        "xField": "Obra",
+        "legend": {
+          "showLegend": false
+        }
+      }
+    },
+    {
+      "id": 11,
+      "title": "Titularidade",
+      "type": "piechart",
+      "gridPos": {
+        "x": 9,
+        "y": 7,
+        "w": 6,
+        "h": 8
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT kind AS \"Tipo\",count(*) AS \"Antenas\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) GROUP BY kind ORDER BY kind",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "pieType": "donut",
+        "displayLabels": [
+          "value"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ],
+          "showLegend": true
+        },
+        "reduceOptions": {
+          "values": true,
+          "calcs": []
+        }
+      }
+    },
+    {
+      "id": 12,
+      "title": "Atualização das integrações API",
+      "type": "table",
+      "gridPos": {
+        "x": 15,
+        "y": 7,
+        "w": 9,
+        "h": 8
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT company_name AS \"Empresa\",source AS \"Conta\",terminals AS \"Antenas\",service_lines AS \"Linhas\",last_success AS \"Último sucesso\",CASE WHEN stale THEN 'Desatualizada' ELSE 'Recente' END AS \"Coleta\" FROM reporting.integrations WHERE source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) ORDER BY company_name,source",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": 13,
+      "title": "Faturado no período · ${currency}",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 8,
+        "h": 4
+      },
+      "description": "Valor das faturas emitidas no período; não comprova pagamento. Uma moeda por vez.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT sum(amount) AS \"Valor\" FROM reporting.invoices WHERE source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) AND currency IN (${currency:sqlstring}) AND $__timeFilter(invoice_date)",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "locale",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 14,
+      "title": "Saldo devido API · ${currency}",
+      "type": "stat",
+      "gridPos": {
+        "x": 8,
+        "y": 15,
+        "w": 8,
+        "h": 4
+      },
+      "description": "Snapshot atual da conta; não é mensalidade nem soma de faturas. Não é limitado pelo período.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT sum(due_amount) AS \"Saldo atual\" FROM reporting.balances WHERE source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) AND currency IN (${currency:sqlstring})",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "locale",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 15,
+      "title": "Previsão mensal manual · BRL",
+      "type": "stat",
+      "gridPos": {
+        "x": 16,
+        "y": 15,
+        "w": 8,
+        "h": 4
+      },
+      "description": "Somente valor cadastrado manualmente em BRL. Não representa emissão ou pagamento de fatura.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT sum(monthly) AS \"Previsão BRL\" FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring})) AND origin<>'API'",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyBRL",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 16,
+      "title": "Latência · coleta futura",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 19,
+        "w": 12,
+        "h": 8
+      },
+      "description": "Nenhum coletor de telemetria está incluído. Sem amostras, o gráfico fica vazio.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(t.collected_at,$__interval),avg(t.latency_ms) AS \"Latência\" FROM reporting.telemetry_samples t WHERE t.source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) AND $__timeFilter(t.collected_at) GROUP BY 1 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "Sem coleta"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "title": "Perda de pacotes · coleta futura",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 19,
+        "w": 12,
+        "h": 8
+      },
+      "description": "Nenhum coletor de telemetria está incluído. Sem amostras, o gráfico fica vazio.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT $__timeGroupAlias(t.collected_at,$__interval),avg(t.loss_percent) AS \"Perda de pacotes\" FROM reporting.telemetry_samples t WHERE t.source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) AND $__timeFilter(t.collected_at) GROUP BY 1 ORDER BY 1",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "Sem coleta"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "title": "Inventário consolidado",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 27,
+        "w": 24,
+        "h": 10
+      },
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT v.company_name AS \"Empresa\",v.kit AS \"KIT\",v.name AS \"Nome\",v.site AS \"Obra / regional\",v.email AS \"E-mail\",v.kind AS \"Titular\",v.origin AS \"Origem\",v.service_status AS \"Serviço\",CASE c.online WHEN true THEN 'Online' WHEN false THEN 'Offline' ELSE 'Sem coleta' END AS \"Conectividade\",v.updated_at AS \"Última atualização\" FROM (SELECT * FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) v LEFT JOIN reporting.connectivity c USING(company_id,source,terminal_id,kit) ORDER BY v.company_name,v.site,v.kit",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      }
+    },
+    {
+      "id": 19,
+      "title": "Faturas API · período e moeda selecionados",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 37,
+        "w": 24,
+        "h": 10
+      },
+      "description": "E-mail, obra e titularidade selecionam contas; exibe a fatura inteira, sem rateio por antena.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "fleet-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "fleet-postgres"
+          },
+          "rawQuery": true,
+          "rawSql": "SELECT company_name AS \"Empresa\",account AS \"Conta\",invoice_id AS \"Fatura\",invoice_date AS \"Emissão\",due_date AS \"Vencimento\",currency AS \"Moeda\",amount AS \"Valor\",due_amount AS \"Saldo devido\",status AS \"Situação\" FROM reporting.invoices WHERE source IN (SELECT DISTINCT source FROM reporting.inventory WHERE ('__all__' IN (${company:sqlstring}) OR company_id IN (${company:sqlstring})) AND ('__all__' IN (${kind:sqlstring}) OR kind IN (${kind:sqlstring})) AND ('__all__' IN (${email:sqlstring}) OR email IN (${email:sqlstring}) OR ('__empty__' IN (${email:sqlstring}) AND email='')) AND ('__all__' IN (${site:sqlstring}) OR site IN (${site:sqlstring})) AND ('__all__' IN (${account:sqlstring}) OR source IN (${account:sqlstring}))) AND currency IN (${currency:sqlstring}) AND $__timeFilter(invoice_date) ORDER BY invoice_date DESC,invoice_id",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      }
+    }
+  ],
+  "description": "Projeto demonstrativo. Cadastros sintéticos. Telemetria futura; situação contratual não comprova conectividade."
+}

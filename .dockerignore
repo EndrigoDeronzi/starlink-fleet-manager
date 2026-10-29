@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+secrets
+config
+backups
+imports
+uploads
+node_modules
+__pycache__
+.pytest_cache
+tests
+screenshots

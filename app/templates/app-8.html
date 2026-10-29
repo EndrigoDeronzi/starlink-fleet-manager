@@ -1,0 +1,15 @@
+
+<div class="stats">
+<section class="panel">Antenas no filtro<strong>{{rows|length}}</strong><small>{{fleet.rows|length}} no total importado</small></section>
+<section class="panel">Serviços ativos no filtro<strong>{{active}}</strong><small>Situação contratual; não indica online</small></section>
+<section class="panel">Contas no filtro<strong>{{account_count}}</strong></section>
+<section class="panel">Sem obra definida<strong>{{pending}}</strong></section></div>
+<section class="panel scroll"><h2>Antenas por obra / regional</h2><table>
+<tr><th>Obra / regional</th><th>Origem</th><th>E-mails originais</th><th>Antenas</th><th></th></tr>
+{% for g in groups %}<tr><td>{{g.unit}}</td><td>{{g.origin}}</td><td>{{g.emails|sort|join(', ') or 'Não informado'}}</td><td>{{g.count}}</td>
+<td><a href="{{url_for('starlink_api_inventory',unit=g.key,email=request.args.get('email',''),source=request.args.get('source',''),status=request.args.get('status',''),q=request.args.get('q',''),kind=request.args.get('kind',''))}}">Ver antenas →</a></td></tr>
+{% else %}<tr><td colspan="5">Nenhuma antena encontrada.</td></tr>{% endfor %}</table></section>
+<section class="panel scroll"><h2>Origem e atualização por conta</h2><p class="muted">Atualização automática a cada 15 minutos. Atualize a página para ver a coleta mais recente.</p><table>
+<tr><th>Conta</th><th>E-mails vinculados</th><th>Última coleta · Brasília</th><th>Coleta</th></tr>
+{% for a in fleet.accounts %}<tr><td>{{a.label}}<br><small>{{a.number}}</small></td><td>{{a.emails|sort|join(', ') or 'Não informado'}}</td><td>{{a.collected}}</td><td>{{'Manual · sem coleta API' if a.manual else 'Desatualizada / verificar' if a.stale else 'Recente'}}</td></tr>{% endfor %}</table></section>
+<section class="panel"><h2>Financeiro consolidado</h2><p>{{fleet.invoices|length}} faturas importadas. O financeiro possui filtros próprios por conta e e-mail.</p><a href="/financeiro">Abrir financeiro →</a></section>

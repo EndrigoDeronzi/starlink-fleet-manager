@@ -1,0 +1,22 @@
+
+<h1>Importar antenas manuais</h1>
+{% if company_current %}<div class="notice">Destino: <strong>{{company_current.name}}</strong>. {% if not company_current.allow_cpf %}Somente CNPJ.{% endif %}</div>{% else %}<div class="notice">Selecione uma empresa no topo para importar.</div>{% endif %}
+<section class="panel"><form method="get" class="grid"><fieldset class="holder-switch"><legend>Tipo de titular</legend>
+{% for value,label in ([('', 'Todos'),('CNPJ','CNPJ'),('CPF','CPF')] if not company_current or company_current.allow_cpf else [('CNPJ','CNPJ')]) %}<label><input type="radio" name="kind" value="{{value}}" {% if request.args.get('kind','') == value %}checked{% endif %}> {{label}}</label>{% endfor %}</fieldset><button>Selecionar tipo</button></form></section>
+<section class="panel"><p>Importe contas {{'CNPJ' if company_current and not company_current.allow_cpf else 'CPF e CNPJ'}} sem API. Os registros entram na visão geral e nos filtros.</p>
+<p><a href="{{url_for('manual_csv_model')}}">Baixar modelo CSV →</a></p>
+{% if company_current %}<form method="post" enctype="multipart/form-data" class="grid">
+<input type="hidden" name="csrf" value="{{session.csrf}}"><input type="hidden" name="action" value="preview"><input type="hidden" name="kind" value="{{'CNPJ' if company_current and not company_current.allow_cpf else request.args.get('kind','')}}">
+<label>Arquivo CSV · UTF-8 ou Windows/Excel<input type="file" name="csv_file" accept=".csv,text/csv" required></label>
+<label>Quando o KIT já existir<select name="mode"><option value="create">Somente novos; impedir duplicidades</option><option value="upsert">Atualizar cadastros feitos por CSV</option></select></label>
+<button>Validar e visualizar</button></form>{% endif %}
+<p class="muted">Até 800 KB e 2.000 linhas. Separador ; recomendado. Mensalidade em reais, somente como previsão; vazio significa desconhecido.</p>
+<p class="muted">Ao atualizar, nome, e-mail, tipo, plano e mensalidade usam os valores do CSV. Nome, plano e mensalidade vazios apagam esses campos. Obra vazia preserva o vínculo existente. Nenhum contrato é alterado na Starlink.</p></section>
+{% if errors %}<div class="notice" role="alert">{{errors}}</div>{% endif %}
+{% if rows %}<section class="panel scroll"><h2>Prévia: {{rows|length}} antenas</h2>
+<p>{{new_count}} novas · {{update_count}} atualizações · {{error_count}} linhas com erro</p>
+<p class="muted">Nenhuma alteração foi aplicada. A prévia expira em 20 minutos.</p>
+<table><tr><th>Linha</th><th>KIT</th><th>Nome</th><th>E-mail</th><th>Tipo</th><th>Obra</th><th>Plano</th><th>Mensalidade prevista (BRL)</th><th>Ação / validação</th></tr>
+{% for r in rows %}<tr><td>{{r.line}}</td><td>{{r.kit}}</td><td>{{r.name}}</td><td>{{r.email}}</td><td>{{r.kind}}</td><td>{{r.unit or 'Preservar / não definida'}}</td><td>{{r.plan}}</td><td>{{r.monthly if r.monthly is not none else 'Não informada'}}</td><td>{{r.action}}{% for e in r.errors %}<p>{{e}}</p>{% endfor %}</td></tr>{% endfor %}</table></section>
+{% if token and not error_count %}<section class="panel"><form method="post" onsubmit="return confirm('Confirmar a importação das linhas apresentadas na prévia?');">
+<input type="hidden" name="csrf" value="{{session.csrf}}"><input type="hidden" name="action" value="confirm"><input type="hidden" name="token" value="{{token}}"><button>Confirmar importação</button></form></section>{% endif %}{% endif %}

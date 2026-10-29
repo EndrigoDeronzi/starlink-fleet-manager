@@ -1,0 +1,90 @@
+name: starlink-fleet-demo
+x-web-environment: &web-environment
+  POSTGRES_HOST: db
+  POSTGRES_DB: ${POSTGRES_DB:-fleet}
+  POSTGRES_USER: ${APP_DB_USER:-fleet_app}
+  POSTGRES_PASSWORD: ${APP_DB_PASSWORD:?Execute scripts/setup_env.py}
+  APP_SECRET: ${APP_SECRET:?Execute scripts/setup_env.py}
+  DEMO_MODE: ${DEMO_MODE:-true}
+  SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fleet}
+      POSTGRES_USER: ${POSTGRES_USER:-fleet_owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Execute scripts/setup_env.py}
+    volumes:
+      - fleet_db:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  init:
+    build: .
+    command: [python, scripts/bootstrap.py]
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB:-fleet}
+      POSTGRES_USER: ${POSTGRES_USER:-fleet_owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Execute scripts/setup_env.py}
+      APP_DB_USER: ${APP_DB_USER:-fleet_app}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Execute scripts/setup_env.py}
+      GRAFANA_DB_USER: ${GRAFANA_DB_USER:-fleet_grafana}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:?Execute scripts/setup_env.py}
+      INITIAL_ADMIN_USERNAME: ${INITIAL_ADMIN_USERNAME:-admin}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:?Execute scripts/setup_env.py}
+      DEMO_MODE: ${DEMO_MODE:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+  web:
+    build: .
+    environment: *web-environment
+    ports:
+      - 127.0.0.1:${WEB_PORT:-8080}:8080
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  grafana:
+    image: ${GRAFANA_IMAGE:-grafana/grafana:13.2.4}
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Execute scripts/setup_env.py}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GRAFANA_DB_NAME: ${POSTGRES_DB:-fleet}
+      GRAFANA_DB_USER: ${GRAFANA_DB_USER:-fleet_grafana}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:?Execute scripts/setup_env.py}
+    volumes:
+      - fleet_grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - 127.0.0.1:${GRAFANA_PORT:-3000}:3000
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  sync:
+    profiles: [api]
+    build: .
+    user: "0:0"
+    command: [python, scripts/sync_starlink.py]
+    environment: *web-environment
+    volumes:
+      - ./config:/run/config:ro
+      - ./secrets:/run/starlink-secrets:ro
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    restart: "no"
+volumes:
+  fleet_db:
+  fleet_grafana:

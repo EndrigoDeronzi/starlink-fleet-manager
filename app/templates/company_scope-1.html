@@ -1,0 +1,4 @@
+<h1>Contas manuais</h1>
+{% if company_current %}<section class="panel"><form method="post" class="grid"><input type="hidden" name="csrf" value="{{session.csrf}}">
+<label>Identificação<input name="name" required maxlength="150"></label><label>Tipo<select name="kind"><option>CNPJ</option>{% if company_current.allow_cpf %}<option>CPF</option>{% endif %}</select></label><label>E-mail<input name="email" type="email" maxlength="254"></label><button>Cadastrar conta</button></form><p class="muted">Empresa: {{company_current.name}}. Não informe senhas neste formulário.</p></section>{% endif %}
+<section class="panel scroll"><table><tr><th>Empresa</th><th>Conta</th><th>Tipo</th><th>E-mail</th></tr>{% for r in rows %}<tr><td>{{r.company_name}}</td><td>{{r.name}}</td><td>{{'CNPJ' if r.kind=='PJ' else r.kind}}</td><td>{{r.email}}</td></tr>{% else %}<tr><td colspan="4">Nenhuma conta nesta seleção.</td></tr>{% endfor %}</table></section>

@@ -1,0 +1,499 @@
+
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Starlink Fleet Manager</title>
+<script>
+try {
+  const theme = localStorage.getItem("fleet-theme");
+  if (theme === "dark") document.documentElement.dataset.theme = "dark";
+} catch (_) {}
+</script>
+<style>
+:root{
+  color-scheme:light;
+  --brand:#00552c;
+  --accent:#008651;
+  --page:#f4f7f5;
+  --surface:#fff;
+  --sidebar:#edf3ef;
+  --elevated:#e8f3ec;
+  --ink:#183b2b;
+  --secondary:#526d5e;
+  --border:#dce7df;
+  --input:#fff;
+  --danger:#a53636;
+  --warning-bg:#fff2d0;
+  --warning-text:#765313;
+  --sidebar-width:260px;
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0e1c14;
+  --surface:#182b1e;
+  --sidebar:#091710;
+  --elevated:#1c3828;
+  --ink:#e6f0e9;
+  --secondary:#a2b9aa;
+  --border:#365240;
+  --input:#14271b;
+  --accent:#24c789;
+  --danger:#df6565;
+  --warning-bg:#403518;
+  --warning-text:#f6d487;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--brand);color:var(--ink);
+  font:14px/1.5 Inter,Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+button,a,input,select,textarea{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.topbar{
+  height:64px;position:fixed;top:0;left:0;right:0;z-index:30;
+  background:var(--brand);color:#fff;display:flex;align-items:center;
+  padding:0 20px;gap:16px;
+}
+.brand{
+  width:220px;flex-shrink:0;line-height:1.25;
+}
+.brand strong{font-size:19px;letter-spacing:.2px}
+.brand small{display:block;font-size:11px;color:#d1e5d8}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.chrome-button{
+  width:auto;margin:0;padding:8px 12px;background:transparent;
+  color:#fff;border:1px solid #ffffff45;border-radius:8px;
+}
+.chrome-button:hover{background:#ffffff18}
+.profile{font-size:12px;color:#fff}
+.profile small{display:block;color:#d1e5d8;font-size:11px}
+.sidebar{
+  position:fixed;left:0;top:64px;bottom:0;
+  width:var(--sidebar-width);background:var(--sidebar);
+  border-right:1px solid var(--border);
+  padding:18px 12px;overflow:auto;z-index:20;
+}
+.nav-section{
+  font-size:10px;letter-spacing:1px;font-weight:700;
+  color:var(--secondary);padding:18px 12px 8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;margin:3px 0;border-radius:8px;
+  color:var(--secondary);border-left:2px solid transparent;
+}
+.nav-item:hover{background:var(--elevated);text-decoration:none}
+.nav-item.active{
+  color:var(--accent);background:var(--elevated);
+  border-left-color:var(--accent);font-weight:600;
+}
+.nav-mark{
+  width:7px;height:7px;border-radius:2px;
+  background:currentColor;flex-shrink:0;opacity:.8;
+}
+.sidebar-note{
+  margin-top:24px;padding:16px 12px;border-top:1px solid var(--border);
+  color:var(--secondary);font-size:11px;
+}
+main{
+  margin:64px 0 0 var(--sidebar-width);
+  padding:24px;min-height:calc(100vh - 64px);
+  background:var(--page);border-top-left-radius:30px;
+}
+body.sidebar-collapsed .sidebar{display:none}
+body.sidebar-collapsed main{margin-left:0}
+body.logged-out main{margin-left:0;border-radius:0}
+.page-context{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:18px;color:var(--secondary);font-size:12px;
+}
+h1{font-size:27px;line-height:1.2;letter-spacing:-.6px;margin:0 0 12px}
+h2{font-size:16px;margin:0 0 12px}
+p{margin:10px 0}
+.panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:20px;margin-bottom:18px;
+  box-shadow:0 2px 7px #00000004;
+}
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;margin:18px 0;
+}
+.stats .panel{margin-bottom:0;font-size:12px;color:var(--secondary)}
+.stats strong{
+  display:block;font-size:29px;line-height:1.2;
+  color:var(--ink);margin:12px 0;
+}
+.stats a,.stats small{font-size:11px}
+.muted{color:var(--secondary);font-size:12px}
+form.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;align-items:end;
+}
+label{display:block;font-size:12px;color:var(--secondary)}
+input,select,textarea{
+  width:100%;min-width:0;margin-top:5px;padding:10px 12px;
+  border:1px solid var(--border);border-radius:9px;
+  background:var(--input);color:var(--ink);
+}
+input[type="hidden"]{display:none}
+button{
+  width:100%;padding:10px 14px;margin-top:5px;
+  background:var(--accent);color:#fff;border:0;
+  border-radius:9px;cursor:pointer;font-weight:500;
+}
+html[data-theme="dark"] button:not(.chrome-button){color:#082417}
+button:hover{filter:brightness(.94)}
+button:disabled{opacity:.5;cursor:default}
+.scroll{overflow-x:auto}
+table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  font-size:13px;text-align:left;
+}
+th{
+  background:var(--elevated);color:var(--secondary);
+  font-size:11px;font-weight:600;padding:12px;
+}
+th:first-child{border-radius:9px 0 0 9px}
+th:last-child{border-radius:0 9px 9px 0}
+td{
+  padding:13px 12px;border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+tbody tr:hover td{background:var(--elevated)}
+.tag{
+  display:inline-block;padding:4px 9px;border-radius:20px;
+  background:var(--elevated);color:var(--ink);font-size:11px;
+  white-space:nowrap;
+}
+.notice{
+  background:var(--warning-bg);color:var(--warning-text);
+  padding:14px 16px;border-radius:12px;margin-bottom:18px;
+}
+.login{max-width:420px;margin:60px auto}
+.logout{width:auto}
+@media(min-width:1500px){
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .brand{width:auto;flex:1}
+  .sidebar{box-shadow:8px 0 24px #00000025}
+  body:not(.sidebar-open) .sidebar{display:none}
+  main{margin-left:0;padding:18px;border-top-left-radius:22px}
+  .profile{display:none}
+  .topbar{padding:0 12px;gap:10px}
+  .topbar-actions{gap:6px}
+  .chrome-button{padding:8px}
+}
+@media(max-width:480px){
+  .brand strong{font-size:16px}
+  .brand small{font-size:10px}
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stats .panel{padding:14px}
+  .panel{padding:16px}
+  form.grid{grid-template-columns:1fr}
+  .page-context{flex-wrap:wrap}
+  .topbar-actions .profile{display:none}
+  h1{font-size:23px}
+}
+
+/* AJUSTE-JUNCAO-MENU */
+body:not(.logged-out){
+    background:var(--sidebar);
+}
+main{
+    border-top-left-radius:20px;
+}
+body.sidebar-collapsed main{
+    border-top-left-radius:0;
+}
+@media(max-width:900px){
+    main{border-top-left-radius:0}
+}
+
+
+/* LOGO-GENERICO */
+.brand{
+    width:auto;
+    min-width:0;
+    flex-shrink:1;
+}
+.brand-logo{
+    display:block;
+    width:223px;
+    max-width:100%;
+    height:auto;
+}
+.brand small{
+    margin-top:2px;
+}
+@media(max-width:600px){
+    .brand-logo{width:155px}
+}
+@media(max-width:400px){
+    .brand-logo{width:105px}
+    .topbar{gap:6px;padding:0 8px}
+    .topbar-actions{gap:4px}
+    .chrome-button{padding:6px;font-size:12px}
+}
+
+
+/* LOGIN-CORPORATIVO */
+body.logged-out .topbar{display:none}
+body.logged-out main{
+    margin:0;
+    min-height:100vh;
+    border-radius:0;
+    padding:32px 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:var(--page);
+}
+body.logged-out main>.notice{
+    width:100%;
+    max-width:960px;
+}
+.access-shell{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    width:100%;
+    max-width:960px;
+    border:1px solid var(--border);
+    border-radius:24px;
+    overflow:hidden;
+    background:var(--surface);
+    box-shadow:0 18px 60px #073e2f12;
+}
+.access-brand{
+    padding:40px;
+    min-height:480px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:40px;
+    color:#fff;
+    background:linear-gradient(145deg,#00552c,#073e2f);
+}
+.access-logo{
+    width:262px;
+    max-width:100%;
+    height:auto;
+}
+.access-eyebrow{
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:1.5px;
+}
+.access-brand .access-eyebrow{color:#c4e6d4}
+.access-brand h1{
+    color:#fff;
+    font-size:36px;
+    margin:14px 0;
+}
+.access-brand p{
+    color:#e2f1e8;
+    font-size:15px;
+    line-height:1.7;
+}
+.access-brand small{color:#c4e6d4;font-size:11px}
+.access-form{
+    padding:48px 40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-width:0;
+}
+.access-form>.access-eyebrow{color:var(--accent)}
+.access-form h2{
+    font-size:25px;
+    margin:10px 0 0;
+    letter-spacing:-.5px;
+}
+.access-form form{margin-top:22px}
+.access-form label{margin-top:16px}
+.access-form input{
+    min-height:46px;
+    border-radius:10px;
+}
+.access-submit{
+    margin-top:24px;
+    min-height:46px;
+    border-radius:10px;
+}
+.access-footnote{
+    margin-top:26px;
+    color:var(--secondary);
+    font-size:11px;
+    line-height:1.7;
+}
+@media(max-width:700px){
+    body.logged-out main{padding:20px 14px}
+    .access-shell{grid-template-columns:1fr;max-width:460px}
+    .access-brand{min-height:0;padding:26px;gap:22px}
+    .access-brand h1{font-size:28px}
+    .access-brand p{font-size:13px;margin-bottom:0}
+    .access-brand>small{display:none}
+    .access-logo{width:210px}
+    .access-form{padding:30px 26px}
+}
+
+
+/* CSV-MANUAL-STYLE */
+.holder-switch{border:0;padding:0;margin:0;min-width:0}
+.holder-switch legend{font-size:12px;color:var(--secondary);margin-bottom:5px}
+.holder-switch label{display:inline-flex;align-items:center;gap:5px;padding:9px 10px;margin:0 4px 4px 0;border:1px solid var(--border);border-radius:9px;background:var(--surface)}
+.holder-switch label:has(input:checked){border-color:var(--accent);background:var(--elevated);color:var(--ink)}
+.holder-switch input[type="radio"]{width:auto;min-height:0;margin:0;accent-color:var(--accent)}
+
+.company-selector{display:flex;align-items:center;gap:8px;margin:0}.company-selector label{color:#fff;font-size:11px}.company-selector select{width:215px;margin:0;padding:7px;background:#fff;color:#183b2b}.company-selector button{width:auto}.page-context{flex-wrap:wrap}@media(max-width:750px){.company-selector select{width:145px}.company-selector label{display:none}.brand-logo{width:125px}.topbar-actions{gap:4px}.profile{display:none}}@media(max-width:460px){.company-selector select{width:125px}.brand-logo{width:85px}#theme-toggle{font-size:10px;padding:5px}}
+.brand-logo{height:36px;object-fit:contain;object-position:left center}
+.holder-switch input[type="checkbox"]{width:auto;margin:0;accent-color:var(--accent)}details summary{cursor:pointer;color:var(--accent);margin:10px 0}
+/* DASHBOARD-FILTERS-V3 */
+.dashboard-filter-form{position:relative}
+.dashboard-filter-main{display:grid;grid-template-columns:minmax(220px,2fr) minmax(170px,1.1fr) minmax(115px,.6fr) auto;gap:14px;align-items:end;padding-right:170px}
+.dashboard-filters input:not([type="hidden"]),.dashboard-filters select{height:40px;padding:8px 11px}
+.dashboard-apply{width:auto;min-width:100px;height:40px;margin:0;padding:8px 20px}
+.dashboard-kind-fixed{display:flex;align-items:center;height:40px;margin-top:5px;padding:8px 12px;border:1px solid var(--border);border-radius:9px;background:var(--elevated);color:var(--ink)}
+.dashboard-more>summary{position:absolute;top:23px;right:0;display:flex;align-items:center;justify-content:center;gap:8px;width:156px;height:40px;margin:0;padding:8px 12px;border:1px solid var(--accent);border-radius:9px;color:var(--accent);background:var(--surface);cursor:pointer;font-weight:500;list-style:none}
+.dashboard-more>summary::-webkit-details-marker{display:none}
+.dashboard-more>summary:hover{background:var(--elevated)}
+.dashboard-more>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.dashboard-filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;border-radius:12px;background:var(--accent);color:var(--surface);font-size:11px}
+.dashboard-chevron{display:inline-block;transition:transform .15s}
+.dashboard-more[open] .dashboard-chevron{transform:rotate(180deg)}
+.dashboard-filter-secondary{display:grid;grid-template-columns:1.4fr 1.4fr 1fr;gap:14px;padding-top:16px;margin-top:16px;border-top:1px solid var(--border)}
+.dashboard-filter-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;font-size:12px;flex-wrap:wrap}
+@media(max-width:1350px){.dashboard-filter-main{padding-right:0;grid-template-columns:2fr 1.2fr 1fr}.dashboard-filter-main>label:first-child{grid-column:1/-1}.dashboard-more>summary{position:static;margin-top:12px;width:auto;max-width:180px}.dashboard-filter-secondary{grid-template-columns:1fr 1fr}.dashboard-filter-secondary>label:first-child{grid-column:1/-1}}
+@media(max-width:600px){.dashboard-filter-main,.dashboard-filter-secondary{grid-template-columns:minmax(0,1fr)}.dashboard-filter-main>label:first-child,.dashboard-filter-secondary>label:first-child{grid-column:auto}.dashboard-apply{width:100%}.dashboard-more>summary{max-width:none;width:100%}.dashboard-filter-footer .muted{display:none}}
+
+</style>
+</head>
+<body class="{% if not session.get('uid') %}logged-out{% endif %}">
+<header class="topbar">
+  {% if session.get('uid') %}
+  <button class="chrome-button" type="button" id="menu-toggle"
+          aria-label="Abrir ou recolher menu" aria-controls="main-navigation"
+          aria-expanded="true">☰</button>
+  {% endif %}
+  <div class="brand">
+    <strong>◉ Fleet Manager</strong>
+    <small>Gestão Starlink</small>
+  </div>
+  {% if session.get('uid') %}
+  <div class="topbar-actions"><form action="/empresa/selecionar" method="post" class="company-selector">
+<input type="hidden" name="csrf" value="{{session.csrf}}">
+<label for="company-choice">Empresa</label><select id="company-choice" name="company_id" onchange="this.form.submit()">
+{% for c in company_options %}<option value="{{c.id}}" {% if company_current and company_current.id==c.id %}selected{% endif %}>{{c.name}}</option>{% endfor %}
+<option value="__all__" {% if not company_current %}selected{% endif %}>Todas as autorizadas · consulta</option></select><noscript><button>Selecionar</button></noscript></form>
+    <button class="chrome-button" id="theme-toggle" type="button">Tema escuro</button>
+    <div class="profile">{{access_user.display_name or access_user.username}}<small>{{access_role_label}}</small></div>
+    <form action="/logout" method="post">
+      <input type="hidden" name="csrf" value="{{session.csrf}}">
+      <button class="chrome-button" type="submit">Sair</button>
+    </form>
+  </div>
+  {% endif %}
+</header>
+
+{% if session.get('uid') %}
+<aside class="sidebar" id="main-navigation" aria-label="Menu principal">
+  
+<div class="nav-section">OPERAÇÃO</div>
+  {% for href,label in [
+    ('/','Dashboard'),
+    ('/starlink','Antenas · visão geral'),
+    ('/vinculos','Obras das antenas')
+  ] %}
+  <a href="{{href}}" class="nav-item {% if request.path == href %}active{% endif %}"
+     {% if request.path == href %}aria-current="page"{% endif %}>
+    <span class="nav-mark" aria-hidden="true"></span>{{label}}
+  </a>
+  {% endfor %}
+
+  
+<a href="/emails-antenas"
+   class="nav-item {% if request.path == '/emails-antenas' %}active{% endif %}">
+  <span class="nav-mark" aria-hidden="true"></span>E-mails das antenas
+</a>
+<a href="/importar-csv" class="nav-item {% if request.path == '/importar-csv' %}active{% endif %}"><span class="nav-mark" aria-hidden="true"></span>Importar antenas · CSV</a><div class="nav-section">GESTÃO</div>
+  {% for href,label in [
+    ('/financeiro','Financeiro'),
+    ('/sites','Obras e regionais'),
+    ('/accounts','Contas manuais'),
+    ('/antennas','Cadastro manual de antenas')
+  ] %}
+  <a href="{{href}}" class="nav-item {% if request.path == href %}active{% endif %}"
+     {% if request.path == href %}aria-current="page"{% endif %}>
+    <span class="nav-mark" aria-hidden="true"></span>{{label}}
+  </a>
+  {% endfor %}
+  {% if can_manage_users %}<a href="/usuarios" class="nav-item {% if request.path == '/usuarios' %}active{% endif %}"><span class="nav-mark"></span>Usuários e permissões</a>{% endif %}
+<a href="/minha-senha" class="nav-item {% if request.path == '/minha-senha' %}active{% endif %}"><span class="nav-mark"></span>Minha senha</a>
+<div class="sidebar-note">{{company_current.name if company_current else 'Todas as empresas'}}<br>Gestão interna de Starlinks</div>
+</aside>
+{% endif %}
+
+<main>
+{% if session.get('uid') %}
+<div class="page-context">
+  <span>{{company_current.name if company_current else 'Todas as empresas'}} / Gestão Starlink</span>
+  <span>Gestão de conectividade{% if demo_mode %} · DEMO · dados fictícios{% endif %}</span>
+</div>
+{% endif %}
+{% if session.get('uid') and not company_current %}<div class="notice">Visão consolidada das empresas autorizadas. Para cadastrar ou alterar, selecione uma empresa no topo.</div>{% endif %}
+{% if access_user and not can_write %}<div class="notice">Perfil Leitura: consulta das empresas autorizadas. Cadastros e alterações estão bloqueados.</div>{% endif %}
+{% if demo_mode %}<div class="notice">DEMONSTRAÇÃO · Todos os cadastros e valores deste ambiente são fictícios.</div>{% endif %}
+{% for message in get_flashed_messages() %}
+<div class="notice" role="status">{{message}}</div>
+{% endfor %}
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const button = document.getElementById("theme-toggle");
+  function updateThemeButton(){
+    if (button) button.textContent =
+      root.dataset.theme === "dark" ? "Tema claro" : "Tema escuro";
+  }
+  updateThemeButton();
+  if(button) button.addEventListener("click", function(){
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    try { localStorage.setItem("fleet-theme", next); } catch (_) {}
+    updateThemeButton();
+  });
+  const menu = document.getElementById("menu-toggle");
+  if(menu){
+    function updateMenuState(){
+      const mobile = window.matchMedia("(max-width:900px)").matches;
+      const expanded = mobile
+        ? document.body.classList.contains("sidebar-open")
+        : !document.body.classList.contains("sidebar-collapsed");
+      menu.setAttribute("aria-expanded", String(expanded));
+    }
+    menu.addEventListener("click", function(){
+      if(window.matchMedia("(max-width:900px)").matches){
+        document.body.classList.toggle("sidebar-open");
+      } else {
+        document.body.classList.toggle("sidebar-collapsed");
+      }
+      updateMenuState();
+    });
+    document.addEventListener("keydown", function(event){
+      if(event.key === "Escape"){
+        document.body.classList.remove("sidebar-open");
+        updateMenuState();
+      }
+    });
+    window.addEventListener("resize", updateMenuState);
+    updateMenuState();
+  }
+})();
+</script>

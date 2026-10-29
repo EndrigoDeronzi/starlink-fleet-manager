@@ -1,0 +1,12 @@
+
+<datalist id="edit-emails">{% for e in fleet.emails %}<option value="{{e}}">{% endfor %}</datalist>
+<section class="panel"><h2>Preencher antenas sem e-mail</h2><p class="muted">O preenchimento em lote exige escolher uma conta de destino e preserva vínculos existentes.</p><form method="post" class="grid" onsubmit="return confirm('Preencher as antenas sem e-mail somente da conta escolhida?');">
+<input type="hidden" name="csrf" value="{{session.csrf}}"><input type="hidden" name="action" value="fill_empty">
+<label>Conta de destino<select name="source" required><option value="">Selecione uma conta</option>{% for a in fleet.accounts %}<option value="{{a.source}}">{{a.emails|sort|join(', ') or a.label}}{% if not company_current and a.emails %} · {{a.company_name}}{% endif %}</option>{% endfor %}</select></label>
+<label>E-mail original<input name="email" type="email" list="edit-emails" maxlength="254" required></label><button>Preencher sem vínculo</button></form></section>
+<section class="panel scroll"><p>{{rows|length}} antenas no filtro</p><table><tr><th>Antena / KIT</th><th>Conta</th><th>E-mail original</th><th></th></tr>
+{% for r in rows %}<tr><td>{{r.name}}<br><small>{{r.kit}}</small></td><td>{{r.account}}<br><small>{{r.number}}</small></td><td><form method="post">
+<input type="hidden" name="csrf" value="{{session.csrf}}"><input type="hidden" name="source" value="{{r.source}}"><input type="hidden" name="terminal_id" value="{{r.terminal}}"><input type="hidden" name="action" value="save">
+<input name="email" type="email" list="edit-emails" value="{{r.email}}" aria-label="E-mail de {{r.kit}}" maxlength="254" required><button>Salvar e-mail</button></form></td><td>
+{% if r.email %}<form method="post" onsubmit="return confirm('Remover este vínculo de e-mail?');"><input type="hidden" name="csrf" value="{{session.csrf}}"><input type="hidden" name="source" value="{{r.source}}"><input type="hidden" name="terminal_id" value="{{r.terminal}}"><input type="hidden" name="action" value="remove"><button>Remover vínculo</button></form>{% endif %}</td></tr>
+{% else %}<tr><td colspan="4">Nenhuma antena encontrada.</td></tr>{% endfor %}</table></section>

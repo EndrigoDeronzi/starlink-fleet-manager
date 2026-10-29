@@ -1,0 +1,17 @@
+/* DASHBOARD-FILTERS-V3 */
+.dashboard-filter-form{position:relative}
+.dashboard-filter-main{display:grid;grid-template-columns:minmax(220px,2fr) minmax(170px,1.1fr) minmax(115px,.6fr) auto;gap:14px;align-items:end;padding-right:170px}
+.dashboard-filters input:not([type="hidden"]),.dashboard-filters select{height:40px;padding:8px 11px}
+.dashboard-apply{width:auto;min-width:100px;height:40px;margin:0;padding:8px 20px}
+.dashboard-kind-fixed{display:flex;align-items:center;height:40px;margin-top:5px;padding:8px 12px;border:1px solid var(--border);border-radius:9px;background:var(--elevated);color:var(--ink)}
+.dashboard-more>summary{position:absolute;top:23px;right:0;display:flex;align-items:center;justify-content:center;gap:8px;width:156px;height:40px;margin:0;padding:8px 12px;border:1px solid var(--accent);border-radius:9px;color:var(--accent);background:var(--surface);cursor:pointer;font-weight:500;list-style:none}
+.dashboard-more>summary::-webkit-details-marker{display:none}
+.dashboard-more>summary:hover{background:var(--elevated)}
+.dashboard-more>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.dashboard-filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;border-radius:12px;background:var(--accent);color:var(--surface);font-size:11px}
+.dashboard-chevron{display:inline-block;transition:transform .15s}
+.dashboard-more[open] .dashboard-chevron{transform:rotate(180deg)}
+.dashboard-filter-secondary{display:grid;grid-template-columns:1.4fr 1.4fr 1fr;gap:14px;padding-top:16px;margin-top:16px;border-top:1px solid var(--border)}
+.dashboard-filter-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;font-size:12px;flex-wrap:wrap}
+@media(max-width:1350px){.dashboard-filter-main{padding-right:0;grid-template-columns:2fr 1.2fr 1fr}.dashboard-filter-main>label:first-child{grid-column:1/-1}.dashboard-more>summary{position:static;margin-top:12px;width:auto;max-width:180px}.dashboard-filter-secondary{grid-template-columns:1fr 1fr}.dashboard-filter-secondary>label:first-child{grid-column:1/-1}}
+@media(max-width:600px){.dashboard-filter-main,.dashboard-filter-secondary{grid-template-columns:minmax(0,1fr)}.dashboard-filter-main>label:first-child,.dashboard-filter-secondary>label:first-child{grid-column:auto}.dashboard-apply{width:100%}.dashboard-more>summary{max-width:none;width:100%}.dashboard-filter-footer .muted{display:none}}

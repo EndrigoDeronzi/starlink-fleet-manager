@@ -1,0 +1,37 @@
+
+<section class="access-shell">
+  <div class="access-brand">
+    <strong style="font-size:26px">◉ Fleet Manager</strong>
+    <div>
+      <span class="access-eyebrow">GESTÃO DE CONECTIVIDADE</span>
+      <h1>Gestão Starlink</h1>
+      <p>Antenas, obras e informações financeiras em um só lugar.</p>
+    </div>
+    <small>Ambiente demonstrativo</small>
+  </div>
+
+  <div class="access-form">
+    <span class="access-eyebrow">ACESSO CORPORATIVO</span>
+    <h2>Entrar no sistema</h2>
+    <p class="muted">Informe suas credenciais para continuar.</p>
+
+    <form method="post" action="/login">
+      <input type="hidden" name="csrf" value="{{session.csrf}}">
+      <label for="access-user">Usuário</label>
+      <input id="access-user" name="username" required
+             autocomplete="username" autocapitalize="none"
+             spellcheck="false" autofocus>
+
+      <label for="access-password">Senha</label>
+      <input id="access-password" name="password" type="password"
+             required autocomplete="current-password">
+
+      <button type="submit" class="access-submit">Entrar</button>
+    </form>
+
+    <p class="access-footnote">
+      Acesso restrito a usuários autorizados.<br>
+      Para suporte, entre em contato com a equipe de TI.
+    </p>
+  </div>
+</section>

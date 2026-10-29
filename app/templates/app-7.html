@@ -1,0 +1,25 @@
+{% set advanced_count = [request.args.get('email',''), request.args.get('source',''), request.args.get('status','')]|reject('equalto','')|list|length %}
+<section class="panel dashboard-filters" aria-label="Filtros do dashboard">
+<form method="get" class="dashboard-filter-form">
+<div class="dashboard-filter-main">
+<label>Pesquisar<input name="q" value="{{request.args.get('q','')}}" placeholder="Nome, KIT ou e-mail"></label>
+<label>Obra / regional<select name="unit"><option value="">Todas</option>
+{% for key,label in unit_options %}<option value="{{key}}" {% if request.args.get('unit') == key %}selected{% endif %}>{{label}}</option>{% endfor %}</select></label>
+{% if company_current and not company_current.allow_cpf %}
+<label>Titular<span class="dashboard-kind-fixed">CNPJ</span><input type="hidden" name="kind" value="CNPJ"></label>
+{% else %}
+<label>Titular<select name="kind">{% for value,label in [('', 'Todos'),('CNPJ','CNPJ'),('CPF','CPF')] %}<option value="{{value}}" {% if request.args.get('kind','') == value %}selected{% endif %}>{{label}}</option>{% endfor %}</select></label>
+{% endif %}
+<button type="submit" class="dashboard-apply">Aplicar</button>
+</div>
+<details class="dashboard-more" {% if advanced_count %}open{% endif %}>
+<summary>Mais filtros{% if advanced_count %}<span class="dashboard-filter-count" title="Filtros adicionais aplicados">{{advanced_count}}</span>{% endif %}<span class="dashboard-chevron" aria-hidden="true">⌄</span></summary>
+<div class="dashboard-filter-secondary">
+<label>E-mail original<input name="email" list="dashboard-filter-emails" value="{{request.args.get('email','')}}" placeholder="Todos · digite ou escolha"><datalist id="dashboard-filter-emails">{% for e in fleet.emails %}<option value="{{e}}">{% endfor %}</datalist></label>
+<label>Conta<select name="source"><option value="">Todas as contas</option>{% for a in fleet.accounts %}<option value="{{a.source}}" {% if request.args.get('source') == a.source %}selected{% endif %}>{{a.emails|sort|join(', ') or a.label}}{% if not company_current and a.emails %} · {{a.company_name}}{% endif %}</option>{% endfor %}</select></label>
+<label>Serviço<select name="status"><option value="">Todos</option>{% for s in ['Ativo','Inativo','Sem informação'] %}<option value="{{s}}" {% if request.args.get('status') == s %}selected{% endif %}>{{s}}</option>{% endfor %}</select></label>
+</div>
+</details>
+<div class="dashboard-filter-footer"><a href="{{request.path}}">Limpar filtros</a><span class="muted">Mais filtros: e-mail, conta e serviço.</span></div>
+</form>
+</section>

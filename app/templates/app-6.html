@@ -1,0 +1,19 @@
+
+<section class="panel"><form method="get" class="grid">
+<fieldset class="holder-switch"><legend>Tipo de titular</legend>
+{% for value,label in ([('', 'Todos'),('CNPJ','CNPJ'),('CPF','CPF')] if not company_current or company_current.allow_cpf else [('CNPJ','CNPJ')]) %}
+<label><input type="radio" name="kind" value="{{value}}" {% if (request.args.get('kind','') == value or (company_current and not company_current.allow_cpf and value == 'CNPJ')) %}checked{% endif %}> {{label}}</label>
+{% endfor %}</fieldset>
+
+<label>Pesquisar<input name="q" value="{{request.args.get('q','')}}" placeholder="Nome, KIT ou e-mail"></label>
+<label>E-mail original<input name="email" type="text" list="filter-emails"
+ value="{{request.args.get('email','')}}" placeholder="Todos · digite ou escolha">
+<datalist id="filter-emails">{% for e in fleet.emails %}<option value="{{e}}">{% endfor %}</datalist></label>
+<label>Conta<select name="source"><option value="">Todas as contas</option>
+{% for a in fleet.accounts %}<option value="{{a.source}}" {% if request.args.get('source') == a.source %}selected{% endif %}>{{a.emails|sort|join(', ') or a.label}}{% if not company_current and a.emails %} · {{a.company_name}}{% endif %}</option>{% endfor %}</select></label>
+<label>Obra / regional<select name="unit"><option value="">Todas</option>
+{% for key,label in unit_options %}<option value="{{key}}" {% if request.args.get('unit') == key %}selected{% endif %}>{{label}}</option>{% endfor %}</select></label>
+<label>Serviço<select name="status"><option value="">Todos</option>
+{% for s in ['Ativo','Inativo','Sem informação'] %}<option {% if request.args.get('status') == s %}selected{% endif %}>{{s}}</option>{% endfor %}</select></label>
+<button>Aplicar filtros</button></form>
+<p><a href="{{request.path}}">Limpar filtros · ver todas as contas</a></p></section>

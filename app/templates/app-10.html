@@ -1,0 +1,6 @@
+
+<section class="panel scroll"><p>{{rows|length}} antenas no filtro</p><table><tr><th>Antena / KIT</th><th>E-mail / conta</th><th>Obra atual</th><th>Alterar unidade</th></tr>
+{% for r in rows %}<tr><td>{{r.name}}<br><small>{{r.kit}}</small></td><td>{{r.email or 'Não informado'}}<br><small>{{r.account}}</small></td><td>{{r.unit}}<br><small>{{r.origin}}</small></td><td><form method="post">
+<input type="hidden" name="csrf" value="{{session.csrf}}"><input type="hidden" name="source" value="{{r.source}}"><input type="hidden" name="terminal_id" value="{{r.terminal}}">
+<select name="site_id" aria-label="Unidade de {{r.kit}}"><option value="">Usar nome da Starlink</option>{% for s in fleet.sites %}<option value="{{s.id}}" {% if s.id == r.site_id %}selected{% endif %}>{{s.name}}</option>{% endfor %}</select><button>Salvar</button></form></td></tr>
+{% else %}<tr><td colspan="4">Nenhuma antena encontrada.</td></tr>{% endfor %}</table></section>

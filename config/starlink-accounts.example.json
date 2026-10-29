@@ -1,0 +1,9 @@
+[
+  {
+    "source": "conta-exemplo",
+    "credentials": "conta-exemplo.json",
+    "original_email": "operacoes@example.invalid",
+    "account_type": "CNPJ",
+    "company_id": "empresa-beta"
+  }
+]

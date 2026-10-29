@@ -1,0 +1,5 @@
+
+<section class="panel scroll"><p>{{rows|length}} de {{fleet.rows|length}} antenas</p><table>
+<tr><th>Obra / regional</th><th>E-mail original</th><th>Nome / KIT</th><th>Série</th><th>Linha</th><th>Conta / tipo</th><th>Origem dos dados</th><th>Plano / previsão mensal</th><th>Serviço</th></tr>
+{% for r in rows %}<tr><td>{{r.unit}}<br><small>{{r.origin}}</small></td><td>{{r.email or 'Não informado'}}</td><td>{{r.name}}<br><small>{{r.kit}}</small></td><td>{{r.serial}}</td><td>{{r.line}}</td><td>{{r.account}}<br><small>{{r.kind}}</small></td><td>{{r.data_origin}}</td><td>{% if r.data_origin == 'Manual · CSV' %}{{r.plan or 'Plano não informado'}}<br><small>BRL {{r.monthly if r.monthly is not none else 'Não informada'}} · previsão</small>{% else %}Não consultado{% endif %}</td><td><span class="tag">{{r.status}}</span></td></tr>
+{% else %}<tr><td colspan="9">Nenhuma antena encontrada.</td></tr>{% endfor %}</table></section>
